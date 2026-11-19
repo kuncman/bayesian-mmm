@@ -1,0 +1,54 @@
+{
+  "l_max": 8,
+  "adstock": "geometric (normalised)",
+  "saturation": "hill",
+  "n_train": 144,
+  "channels": {
+    "tv": {
+      "alpha": 0.7,
+      "half_sat": 32000.0,
+      "slope": 2.0,
+      "roi": 1.6,
+      "beta": 109014.99092795464,
+      "train_contribution": 4891981.279999999
+    },
+    "search": {
+      "alpha": 0.15,
+      "half_sat": 14000.0,
+      "slope": 1.2,
+      "roi": 3.2,
+      "beta": 94619.29022993312,
+      "train_contribution": 7135385.984
+    },
+    "social": {
+      "alpha": 0.4,
+      "half_sat": 12000.0,
+      "slope": 1.5,
+      "roi": 2.0,
+      "beta": 47733.150532896005,
+      "train_contribution": 3238457.6399999997
+    },
+    "display": {
+      "alpha": 0.3,
+      "half_sat": 9000.0,
+      "slope": 1.0,
+      "roi": 0.6,
+      "beta": 8756.410333071246,
+      "train_contribution": 401014.26
+    },
+    "radio": {
+      "alpha": 0.5,
+      "half_sat": 10000.0,
+      "slope": 1.8,
+      "roi": 1.1,
+      "beta": 24295.86556950442,
+      "train_contribution": 1101317.965
+    }
+  },
+  "controls": {
+    "price_index": -60000,
+    "competitor_promo": -6000,
+    "holiday": 22000
+  },
+  "noise_sd": 5000
+}

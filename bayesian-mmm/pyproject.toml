@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bayesian-mmm"
+version = "1.0.0"
+description = "End-to-end Bayesian Marketing Mix Model (adstock, saturation, lift-test calibration, budget optimisation) built on PyMC"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+    "pymc>=5.16",
+    "arviz>=0.18",
+    "numpy>=1.26",
+    "pandas>=2.1",
+    "scipy>=1.11",
+    "matplotlib>=3.8",
+    "pyyaml>=6.0",
+    "h5netcdf>=1.3",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.5"]
+fast = ["numpyro>=0.15", "nutpie>=0.13"]
+
+[project.scripts]
+bayesian-mmm = "bayesian_mmm.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["slow: runs MCMC sampling (enable with --runslow)"]
+filterwarnings = ["ignore::DeprecationWarning", "ignore::FutureWarning", "ignore::UserWarning", "ignore::RuntimeWarning"]
+
+[tool.ruff]
+line-length = 120

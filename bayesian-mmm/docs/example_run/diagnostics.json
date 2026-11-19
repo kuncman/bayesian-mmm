@@ -1,0 +1,59 @@
+{
+  "convergence": {
+    "n_posterior_draws": 4000,
+    "divergences": 0,
+    "divergence_rate": 0.0,
+    "max_r_hat": 1.0029048151832887,
+    "worst_r_hat_param": "trend_delta[1]",
+    "min_ess_bulk": 2150.170523032761,
+    "min_ess_tail": 1838.8164419918564,
+    "min_bfmi": 0.8198775446774468,
+    "checks": {
+      "no_divergences": true,
+      "r_hat_ok": true,
+      "ess_ok": true,
+      "bfmi_ok": true
+    },
+    "converged": true
+  },
+  "fit_metrics": {
+    "train": {
+      "r2": 0.9835476236277527,
+      "mape_pct": 1.2924707417971535,
+      "nrmse": 0.030971396040150107,
+      "rmse": 5381.074102192414,
+      "coverage_94_pct": 95.83333333333334,
+      "coverage_50_pct": 55.55555555555556,
+      "crps": 3074.9836799869404
+    },
+    "holdout": {
+      "r2": 0.9676772830931855,
+      "mape_pct": 1.0914154030052545,
+      "nrmse": 0.0573667796498433,
+      "rmse": 4178.3856936132715,
+      "coverage_94_pct": 100.0,
+      "coverage_50_pct": 66.66666666666666,
+      "crps": 2654.6689665638164
+    }
+  },
+  "prior_check": {
+    "observed_inside_prior_94_pct": 100.0,
+    "prior_predictive_mean": 287993.0661682042,
+    "observed_mean": 333770.9767361111
+  },
+  "budget_optimisation": {
+    "success": true,
+    "message": "Optimization terminated successfully",
+    "budget_per_period": 60442.513076923075,
+    "horizon_periods": 13,
+    "expected_contribution_current": 1512402.488718794,
+    "expected_contribution_optimal": 1643432.778604363,
+    "expected_uplift": 131030.2898855695,
+    "expected_uplift_pct": 8.663718214095876,
+    "uplift_ci": [
+      39122.97979428534,
+      199872.95013506713
+    ],
+    "prob_uplift_positive": 0.991
+  }
+}

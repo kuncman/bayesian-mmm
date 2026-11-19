@@ -1,0 +1,83 @@
+# =============================================================================
+# Bayesian MMM configuration
+# Only keys you want to change are required - anything missing falls back to the
+# defaults in src/bayesian_mmm/config.py. Every option is explained in README.md.
+# =============================================================================
+
+data:
+  path: data/mmm_synthetic.csv        # one row per period (week), sorted or unsorted
+  date_col: date
+  target_col: revenue                 # the KPI to explain (revenue, sales, sign-ups...)
+  channel_cols:                       # paid media SPEND per period (same currency as target for ROI)
+    - tv
+    - search
+    - social
+    - display
+    - radio
+  control_cols:                       # non-media drivers; 0/1 columns are kept as-is, others are z-scored
+    - price_index
+    - competitor_promo
+    - holiday
+  holdout_periods: 12                 # last N periods held out for out-of-sample validation (0 = none)
+  lift_tests_path: data/lift_tests.csv  # optional experiment results for calibration (null to disable)
+  ground_truth_path: data/ground_truth.json  # synthetic data only (null for real data)
+
+model:
+  adstock:
+    type: geometric                   # geometric | delayed | weibull
+    l_max: 8                          # max carry-over lag in periods
+    normalize: true                   # weights sum to 1 (keeps beta interpretable)
+  saturation:
+    type: hill                        # hill | logistic | michaelis_menten
+  trend:
+    type: piecewise                   # none | linear | piecewise
+    n_changepoints: 5
+    changepoint_range: 0.8            # changepoints placed in first 80% of training data
+  seasonality:
+    yearly_fourier_order: 3           # 0 disables; 2-4 is typical for weekly data
+    period_days: 365.25
+  likelihood: studentt                # studentt (robust to outliers) | normal
+  media_prior: roi                    # roi (prior on ROI) | spend_share (HalfNormal on beta)
+
+  priors:                             # pairs are [alpha, beta] of the distribution named in the README
+    intercept_mu: 0.5                 # target is scaled by its max, so baseline ~0.3-0.7
+    intercept_sigma: 0.3
+    trend_slope_sigma: 0.3
+    changepoint_scale: 0.05           # Laplace scale - smaller = smoother trend
+    fourier_sigma: 0.2
+    control_sigma: 0.2
+    noise_sigma: 0.1
+    adstock_alpha: [2.0, 3.0]         # Beta(a, b): mean 0.4
+    adstock_theta: [2.0, 1.0]         # Gamma(a, b) - delayed adstock peak lag
+    adstock_shape: [2.0, 2.0]         # Gamma(a, b) - weibull adstock
+    adstock_scale: [2.0, 4.0]         # Gamma(a, b) - weibull adstock (fraction of l_max)
+    sat_half: [3.0, 6.0]              # Gamma(a, b): mean 0.5 x max historical spend
+    sat_slope: [3.0, 2.0]             # Gamma(a, b): mean 1.5
+    sat_lam: [3.0, 1.0]               # Gamma(a, b) - logistic saturation
+    beta_sigma: 2.0                   # only used when media_prior = spend_share
+    roi_mu: 0.0                       # LogNormal mu (log scale): exp(0) = median ROI of 1.0
+    roi_sigma: 0.8                    # LogNormal sigma: 94% prior interval ~ [0.22, 4.5]
+    channel_roi_mu: {}                # per-channel MEDIAN ROI, e.g. {search: 2.5}
+    channel_roi_sigma: {}             # per-channel LogNormal sigma, e.g. {search: 0.4}
+
+sampler:
+  draws: 1000
+  tune: 1500
+  chains: 4
+  cores: null                         # null = min(chains, CPUs)
+  target_accept: 0.95                 # raise to 0.98-0.99 if you see divergences
+  random_seed: 42
+  nuts_sampler: pymc                  # pymc | numpyro | nutpie | blackjax (faster; extra install)
+  prior_samples: 500
+
+optimizer:
+  budget: null                        # total spend per period; null = current total
+  reference_periods: 52               # "current" spend = average of the last N periods (52 smooths out flighting)
+  lower_bound_multiplier: 0.5         # each channel may go down to 50% of current...
+  upper_bound_multiplier: 1.5         # ...and up to 150%
+  horizon_periods: 13                 # uplift is reported over this many periods
+
+output:
+  dir: outputs
+  save_trace: true
+  dpi: 130
